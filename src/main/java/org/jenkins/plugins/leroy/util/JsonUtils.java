@@ -15,8 +15,6 @@ public class JsonUtils {
 
     //test
     static String FORM = "{\"name\":\"j3\",\"description\":\"\",\"logrotate\":false,\"\":\"0\",\"buildDiscarder\":{\"stapler-class\":\"hudson.tasks.LogRotator\",\"daysToKeepStr\":\"\",\"numToKeepStr\":\"\",\"artifactDaysToKeepStr\":\"\",\"artifactNumToKeepStr\":\"\"},\"properties\":{\"stapler-class-bag\":\"true\",\"hudson-model-ParametersDefinitionProperty\":{\"parameterized\":{\"parameter\":[{\"name\":\"Workflow\",\"choices\":\"echotest\\nerror_state_convey\\ninternal_test\\nisfailure\\nissuccess\\nis_not_failure\\nis_not_success\\nprecondition\\npythontest\\npyurl\\nsub\\ntest\\ntransfertest\\nunix_exec\\nwindows-test\",\"description\":\"\",\"stapler-class\":\"hudson.model.ChoiceParameterDefinition\",\"kind\":\"hudson.model.ChoiceParameterDefinition\"},{\"name\":\"Environment\",\"choices\":\"aix\\ntest\",\"description\":\"\",\"stapler-class\":\"hudson.model.ChoiceParameterDefinition\",\"kind\":\"hudson.model.ChoiceParameterDefinition\"}]}},\"hudson-plugins-copyartifact-CopyArtifactPermissionProperty\":{}},\"scm\":{\"value\":\"3\",\"locations\":{\"remote\":\"svn://planeti.biz/proj/leroy-jenkins/LEROY_CONFIGURATION_ROOT\",\"local\":\".\",\"depthOption\":\"infinity\",\"ignoreExternalsOption\":false},\"\":[\"0\",\"auto\"],\"workspaceUpdater\":{\"stapler-class\":\"hudson.scm.subversion.UpdateUpdater\"},\"ignoreDirPropChanges\":false,\"excludedRegions\":\"\",\"includedRegions\":\"\",\"excludedUsers\":\"\",\"excludedCommitMessages\":\"\",\"excludedRevprop\":\"\",\"filterChangelog\":false},\"builder\":[{\"projectName\":\"Leroy Configuration Job\",\"\":\"4\",\"selector\":{\"stapler-class\":\"hudson.plugins.copyartifact.SpecificBuildSelector\",\"buildNumber\":\"7\"},\"filter\":\"**\",\"target\":\"c:\\\\leroy\\\\artifacts/\",\"parameters\":\"\",\"flatten\":false,\"optional\":false,\"fingerprintArtifacts\":true,\"stapler-class\":\"hudson.plugins.copyartifact.CopyArtifact\",\"kind\":\"hudson.plugins.copyartifact.CopyArtifact\"},{\"workflow\":\"echotest\",\"projectname\":\"j3\",\"envtablediv\":{\"envtable\":{\"enabled_envs\":[true,true],\"envlist\":\"aix\\ntest\\n\",\"autodeploy_envs\":[true,false],\"aix\":\"last\",\"default_env\":\"test\",\"test\":\"scm\"}},\"stapler-class\":\"org.jenkins.plugins.leroy.LeroyBuilder\",\"kind\":\"org.jenkins.plugins.leroy.LeroyBuilder\"}],\"publisher\":{\"artifacts\":\"**\",\"excludes\":\"\",\"latestOnly\":false,\"allowEmptyArchive\":false,\"onlyIfSuccessful\":false,\"stapler-class\":\"hudson.tasks.ArtifactArchiver\",\"kind\":\"hudson.tasks.ArtifactArchiver\"},\"core:apply\":\"\"}";
-    static String ENVTABLEDIV = "[{\"envtablediv\":{\"envtable\":{\"aix\":\"last\",\"default_env\":\"test\",\"autodeploy_envs\":[true,false],\"test\":\"scm\",\"enabled_envs\":[true,true]}},\"stapler-class\":\"org.jenkins.plugins.leroy.LeroyBuilder\",\"projectname\":\"j3\",\"workflow\":\"echotest\",\"kind\":\"org.jenkins.plugins.leroy.LeroyBuilder\"}]";
-    static String PARAMETERS = "[{\"stapler-class\":\"hudson.model.ChoiceParameterDefinition\",\"description\":\"\",\"choices\":\"echotest\\nerror_state_convey\\ninternal_test\\nisfailure\\nissuccess\\nis_not_failure\\nis_not_success\\nprecondition\\npythontest\\npyurl\\nsub\\ntest\\ntransfertest\\nunix_exec\\nwindows-test\",\"name\":\"Workflow\",\"kind\":\"hudson.model.ChoiceParameterDefinition\"},{\"stapler-class\":\"hudson.model.ChoiceParameterDefinition\",\"description\":\"\",\"choices\":\"aix\\ntest\",\"name\":\"Environment\",\"kind\":\"hudson.model.ChoiceParameterDefinition\"}]";
     static String PARAMS_WITH_TARGETS = "{\"name\":\"d3\",\"description\":\"\",\"\":[\"\",\"0\"],\"logrotate\":false,\"buildDiscarder\":{\"stapler-class\":\"hudson.tasks.LogRotator\",\"daysToKeepStr\":\"\",\"numToKeepStr\":\"\",\"artifactDaysToKeepStr\":\"\",\"artifactNumToKeepStr\":\"\"},\"properties\":{\"stapler-class-bag\":\"true\",\"hudson-model-ParametersDefinitionProperty\":{},\"hudson-plugins-copyartifact-CopyArtifactPermissionProperty\":{}},\"scm\":{\"value\":\"3\",\"locations\":{\"remote\":\"svn://planeti.biz/proj/leroy-jenkins/LEROY_CONFIGURATION_ROOT\",\"local\":\".\",\"depthOption\":\"infinity\",\"ignoreExternalsOption\":false},\"\":[\"0\",\"auto\"],\"workspaceUpdater\":{\"stapler-class\":\"hudson.scm.subversion.UpdateUpdater\"},\"ignoreDirPropChanges\":false,\"excludedRegions\":\"\",\"includedRegions\":\"\",\"excludedUsers\":\"\",\"excludedCommitMessages\":\"\",\"excludedRevprop\":\"\",\"filterChangelog\":false},\"builder\":[{\"projectName\":\"\",\"\":\"0\",\"selector\":{\"stapler-class\":\"hudson.plugins.copyartifact.StatusBuildSelector\",\"stableOnly\":true},\"filter\":\"\",\"target\":\"c:/leroy/artifacts/\",\"parameters\":\"\",\"flatten\":false,\"optional\":false,\"fingerprintArtifacts\":true,\"stapler-class\":\"hudson.plugins.copyartifact.CopyArtifact\",\"kind\":\"hudson.plugins.copyartifact.CopyArtifact\"},{\"targets\":[{\"workflow\":\"test\",\"environment\":\"test\",\"configSource\":\"scm\",\"autoDeploy\":false},{\"workflow\":\"windows-test\",\"environment\":\"test\",\"configSource\":\"scm\",\"autoDeploy\":true}],\"projectname\":\"d3\",\"stapler-class\":\"org.jenkins.plugins.leroy.LeroyBuilder\",\"kind\":\"org.jenkins.plugins.leroy.LeroyBuilder\"}],\"core:apply\":\"\"}";
 
     private static final String LEROY_BUILDER_JPATH = "$.builder[*][?(@.kind==org.jenkins.plugins.leroy.LeroyBuilder)]";
@@ -73,12 +71,7 @@ public class JsonUtils {
     }
 
     public static List<String> getAllEnvironments(String json) {
-//        Map<String, String[]> parameters = getAllParameters(json);
         List<String> result = new ArrayList<String>();
-//        if (parameters != null) {
-//            String[] allEnvs = parameters.get(Constants.ENVIRONMENT_PARAM);
-//            result = new ArrayList<String>(Arrays.asList(allEnvs));
-//        }
         String builderJson = getLeroyBuilderJSON(json);
         String values = JsonPath.read(builderJson, "$.[0].envtablediv.envtable.envlist");
         result = new ArrayList<String>(Arrays.asList(values.split("\\n")));
@@ -196,6 +189,7 @@ public class JsonUtils {
         t.environment = (String) jsonTarget.get("environment");
         t.configSource = (String) jsonTarget.get("configSource");
         t.autoDeploy = (Boolean) jsonTarget.get("autoDeploy");
+        t.leroyNode = (String) jsonTarget.get("leroyNode");
         return t;
     }
 
@@ -214,11 +208,13 @@ public class JsonUtils {
             keyValue[0] = keyValue[0].trim();
             keyValue[1] = keyValue[1].trim();
             if (Constants.ENVIRONMENT_PARAM.equalsIgnoreCase(keyValue[0])) {
-                t.environment = keyValue[1].trim();
+                t.environment = keyValue[1];
             } else if (Constants.WORKFLOW_PARAM.equalsIgnoreCase(keyValue[0])) {
-                t.workflow = keyValue[1].trim();
+                t.workflow = keyValue[1];
             } else if (Constants.CONFIG_SOURCE_PARAM.equalsIgnoreCase(keyValue[0])) {
-                t.configSource = keyValue[1].trim();
+                t.configSource = keyValue[1];
+            } else if (Constants.NODE_PARAM.equalsIgnoreCase(keyValue[0])) {
+                t.leroyNode = keyValue[1];
             }
         }
         return t;

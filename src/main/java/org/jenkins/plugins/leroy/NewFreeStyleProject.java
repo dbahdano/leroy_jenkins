@@ -107,7 +107,8 @@ public class NewFreeStyleProject extends NewProject<NewFreeStyleProject, NewFree
             for (LeroyBuilder.Target t : targets) {
                 String param = Constants.ENVIRONMENT_PARAM + "=" + t.environment
                         + ", " + Constants.WORKFLOW_PARAM + "=" + t.workflow
-                        + ", " + Constants.CONFIG_SOURCE_PARAM + "=" + t.configSource;
+                        + ", " + Constants.CONFIG_SOURCE_PARAM + "=" + t.configSource
+                        + ", " + Constants.NODE_PARAM + "=" + t.leroyNode;
                 buildParamsTargets.add(param);
                 LOGGER.fine("Target Configuration : " + param);
             }

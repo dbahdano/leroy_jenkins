@@ -198,7 +198,7 @@ public abstract class NewProject<P extends NewProject<P, B>, B extends NewBuild<
             builders.add(new CopyArtifact("", "", new StatusBuildSelector(true), "", "${LEROY_HOME}/artifacts/", false, false, true));
         }
         if (!containsLeroy) {
-            LeroyBuilder builder = new LeroyBuilder(this.getName(), new ArrayList<LeroyBuilder.Target>(), "", false);
+            LeroyBuilder builder = new LeroyBuilder(new ArrayList<LeroyBuilder.Target>());
             builder.setWorkflows(workflow);
             builders.add(builder);
         }

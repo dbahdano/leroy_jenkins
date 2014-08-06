@@ -3,21 +3,22 @@
   <f:section title="Build Settings">
     <f:block>
         <!-- Leroy Node field -->
-        <f:entry title="${%Leroy Node}" field="leroyNode">
-            <f:select />
-        </f:entry>
+        <!--<f:entry title="${%Leroy Node}" field="leroyNode">-->
+            <!--<f:select />-->
+        <!--</f:entry>-->
 
         <!-- Leroy Node field -->
-        <f:entry title="${%Last build policy}">
-            <f:booleanRadio field="useLastBuildWithSameTarget" false="Latest stable" true="${%Same env/workflow combination}" />
-        </f:entry>
+        <!--<f:entry title="${%Last build policy}">-->
+            <!--<f:booleanRadio field="useLastBuildWithSameTarget" false="Latest stable" true="${%Same env/workflow combination}" />-->
+        <!--</f:entry>-->
 
         <!-- Target configuration-->
         <f:entry title="${%Target Configurations}">
             <f:repeatable var="targets" items="${instance.getTargets()}" minimum="1" add="${%Add target configuration}">
-
                 <table width="100%">
-
+                    <f:entry title="${%Leroy Node}" field="leroyNode">
+                        <f:select default="${targets.leroyNode}"/>
+                    </f:entry>
                     <f:entry title="${%Workflow}" field="workflow">
                         <f:select default="${targets.workflow}"/>
                     </f:entry>
@@ -32,17 +33,12 @@
                     </f:entry>
                     <f:entry title="">
                         <div align="left">
-                            <f:repeatableDeleteButton class="deleteTargetConfigButton" value="${%Delete target configuration}"/>
+                            <f:repeatableDeleteButton value="${%Delete target configuration}"/>
                         </div>
                     </f:entry>
                 </table>
             </f:repeatable>
         </f:entry>
-        <f:invisibleEntry>
-            <f:textbox field="projectname" />
-        </f:invisibleEntry>
-
-
-        </f:block>  
+    </f:block>
   </f:section>
-</j:jelly>  
+</j:jelly>

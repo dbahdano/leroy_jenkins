@@ -40,30 +40,13 @@ public class LeroyBuilder extends AbstractLeroyBuilder {
 
     private static final Logger LOGGER = Logger.getLogger(LeroyBuilder.class.getName());
 
-    private String projectname;
-
     private List<Target> targets;
-
-    private String leroyNode;
 
     private List<String> workflows; // from SCM
 
-    private boolean useLastBuildWithSameTarget;
-
     @DataBoundConstructor
-    public LeroyBuilder(String projectname, List<Target> targets, String leroyNode, boolean useLastBuildWithSameTarget) {
-        this.projectname = projectname;
+    public LeroyBuilder(List<Target> targets) {
         this.targets = targets;
-        this.leroyNode = leroyNode;
-        this.useLastBuildWithSameTarget = useLastBuildWithSameTarget;
-    }
-
-    public String getProjectname() {
-        return projectname;
-    }
-
-    public String getLeroyNode() {
-        return leroyNode;
     }
 
     public List<Target> getTargets() {
@@ -72,14 +55,6 @@ public class LeroyBuilder extends AbstractLeroyBuilder {
 
     public void setWorkflows(List<String> workflows) {
         this.workflows = workflows;
-    }
-
-    public boolean isUseLastBuildWithSameTarget() {
-        return useLastBuildWithSameTarget;
-    }
-
-    public void setUseLastBuildWithSameTarget(boolean useLastBuildWithSameTarget) {
-        this.useLastBuildWithSameTarget = useLastBuildWithSameTarget;
     }
 
     /**
@@ -141,24 +116,16 @@ public class LeroyBuilder extends AbstractLeroyBuilder {
             new FilePath(ws, "environments.xml").delete();
             log.println("Remove old config files from workspace - success!");
 
-            // now copy artifact from LAST BUILD to workspace
-            // we have 2 possible source builds here: last stable and last stable with the same "target" (workflow/environment combination)
-            CopyArtifact copyFromBuildToWks = null;
-            if (useLastBuildWithSameTarget) {
-                copyFromBuildToWks = new CopyArtifact(build.getProject().getName(), "", new BuildSelector() {
-                    @Override
-                    protected boolean isSelectable(Run<?, ?> run, EnvVars env) {
-                        String buildname = target.environment + "_" + target.workflow;
-                        if (run.getResult().isBetterOrEqualTo(Result.UNSTABLE) && buildname.equals(run.getDisplayName())) {
-                            return true;
-                        }
-                        return false;
+            // now copy artifact from last successfule build for current workflow
+            CopyArtifact copyFromBuildToWks = new CopyArtifact(build.getProject().getName(), "", new BuildSelector() {
+                @Override
+                protected boolean isSelectable(Run<?, ?> run, EnvVars env) {
+                    if (run.getResult().isBetterOrEqualTo(Result.SUCCESS) && run.getDisplayName().endsWith("_" + target.workflow)) {
+                        return true;
                     }
-                }, "", ws.getRemote(), false, false, true);
-            } else {
-                // or copy artifacts from the latest stable build
-                copyFromBuildToWks = new CopyArtifact(build.getProject().getName(), "", new StatusBuildSelector(true), "", ws.getRemote(), false, false, true);
-            }
+                    return false;
+                }
+            }, "", ws.getRemote(), false, false, true);
             boolean success = copyFromBuildToWks.perform(build, launcher, listener);
             if (!success) {
                 return false;
@@ -204,7 +171,6 @@ public class LeroyBuilder extends AbstractLeroyBuilder {
     @Override
     public DescriptorImpl getDescriptor() {
         DescriptorImpl descr = (DescriptorImpl) super.getDescriptor();
-        descr.setLeroyNode(leroyNode);
         descr.setWorkflows(workflows);
         return descr;
     }
@@ -217,10 +183,6 @@ public class LeroyBuilder extends AbstractLeroyBuilder {
 
         public DescriptorImpl() {
             load();
-        }
-
-        public void setLeroyNode(String leroyNode) {
-            this.leroyNode = leroyNode;
         }
 
         public void setWorkflows(List<String> workflows) {
@@ -314,13 +276,15 @@ public class LeroyBuilder extends AbstractLeroyBuilder {
     }
 
     public static class Target {
+        public String leroyNode;
         public String environment;
         public String workflow;
         public String configSource;
         public boolean autoDeploy;
 
         @DataBoundConstructor
-        public Target(String environment, String workflow, String configSource, boolean autoDeploy) {
+        public Target(String leroyNode, String environment, String workflow, String configSource, boolean autoDeploy) {
+            this.leroyNode = leroyNode;
             this.environment = environment;
             this.workflow = workflow;
             this.configSource = configSource;
@@ -333,7 +297,8 @@ public class LeroyBuilder extends AbstractLeroyBuilder {
         @Override
         public String toString() {
             return "Target{" +
-                    "environment='" + environment + '\'' +
+                    "leroyNode='" + leroyNode + '\'' +
+                    ", environment='" + environment + '\'' +
                     ", workflow='" + workflow + '\'' +
                     ", configSource='" + configSource + '\'' +
                     ", autoDeploy=" + autoDeploy +
